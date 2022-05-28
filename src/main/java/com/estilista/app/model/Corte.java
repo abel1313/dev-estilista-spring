@@ -13,7 +13,7 @@ import lombok.ToString;
 
 /**
  * @author Abel Tiburcio
- * @param clienteCita
+ * @param tipoCorte
  * */
 @Setter
 @Getter
@@ -21,10 +21,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Cliente extends SuperClase{
-	
-	  @Column( name = "PERSONA_ID")
-	  private Persona personaCliente;
-	
-	
+public class Corte extends SuperClase{
+	  
+	  @Column( name = "TIPO_CORTE_ID")
+	  private TipoCorte tipoCorte;
+
 }

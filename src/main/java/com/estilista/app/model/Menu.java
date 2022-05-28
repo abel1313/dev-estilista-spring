@@ -5,7 +5,7 @@ package com.estilista.app.model;
 import javax.persistence.Column;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,18 +13,17 @@ import lombok.ToString;
 
 /**
  * @author Abel Tiburcio
- * @param clienteCita
+ * @param nombreMenu
  * */
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @ToString
-public class Cliente extends SuperClase{
-	
-	  @Column( name = "PERSONA_ID")
-	  private Persona personaCliente;
+public class Menu extends SuperClase{
+
+	  @Column( name = "NOMBRE_MENU")
+	  private String nombreMenu;
 	
 	
 }

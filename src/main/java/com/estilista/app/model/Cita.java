@@ -31,7 +31,6 @@ public class Cita extends SuperClase{
 	  @Column( name = "USUARIO_ID")
 	  private Usuario usuarioCita;
 	  
-	  
 	  @Column( name = "USUARIO_ID")
 	  private Cliente clienteCita;
 	  

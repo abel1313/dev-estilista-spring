@@ -13,7 +13,9 @@ import lombok.ToString;
 
 /**
  * @author Abel Tiburcio
- * @param clienteCita
+ * @param subTotal
+ * @param ventaDetalleSinCita
+ * @param cortePelo
  * */
 @Setter
 @Getter
@@ -21,10 +23,15 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Cliente extends SuperClase{
-	
-	  @Column( name = "PERSONA_ID")
-	  private Persona personaCliente;
-	
-	
+public class DetalleSinCita extends SuperClase{
+
+	  @Column( name = "SUB_TOTAL")
+	  private double subTotal;
+	  
+	  @Column( name = "VENTA_ID")
+	  private Venta ventaDetalleSinCita;
+	  
+	  @Column( name = "CORTE_PELO_ID")
+	  private CortePelo cortePelo;
+
 }
