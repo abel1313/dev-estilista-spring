@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.estilista.app.dto.RespuestaDTO;
 import com.estilista.app.exception.ResourceNotFoundException;
+import com.estilista.app.model.ResponseGeneric;
 import com.estilista.app.model.SuperClase;
 import com.estilista.app.repositories.IBaseRepository;
 import com.estilista.app.services.IBaseService;
@@ -25,10 +28,16 @@ implements IBaseService<E, ID> {
 	}
 
 	@Override
-	public List<E> getAll() throws Exception{
-		// TODO Auto-generated method stub
+	public ResponseGeneric<List<E>> getAll() throws Exception{
+		final ResponseGeneric<List<E>> responseGeneric = new ResponseGeneric<>();
 		try {
-			return this.iBaseRepository.findAll();
+			final List<E> lista = this.iBaseRepository.findAll();
+			if( lista.size() > 0 ) {
+				responseGeneric.setCodeValue(200);
+				responseGeneric.setDatos(lista);
+			}
+			
+			return responseGeneric;
 		}catch(Exception e)
 		{
 			 throw new ResourceNotFoundException(e.getMessage());
@@ -37,25 +46,42 @@ implements IBaseService<E, ID> {
 	}
 
 	@Override
-	public E update(ID id, E e) throws Exception {
-		// TODO Auto-generated method stub
+	public ResponseGeneric<E> update(ID id, E e) throws Exception {
 		try {
-			Optional<E> lista = this.iBaseRepository.findById(id);
-			E entityUpdate = lista.get();
-			entityUpdate = this.iBaseRepository.save(entityUpdate);
-			return entityUpdate;
+			ResponseGeneric<E> responseGeneric = new ResponseGeneric<>();
+			
+			Optional<E> entity = this.iBaseRepository.findById(id);
+			if(entity.isPresent()) {
+				E entityUpdate = entity.get();
+				entityUpdate = this.iBaseRepository.save(entityUpdate);
+				responseGeneric.setCodeValue(200);
+				responseGeneric.setMensaje("Se actualizp correctamente");
+			}else {
+				responseGeneric.setMensaje("Ocurrio un error al actualizar");
+			}
+			
+			return responseGeneric;
 		}catch(Exception exception)
 		{
-
 			 throw new ResourceNotFoundException(exception.getMessage());
 //			throw new Exception(exception.getMessage());
 		}
 	}
 	@Override
-	public E save(E e) throws Exception {
-		// TODO Auto-generated method stub
+	public ResponseGeneric<E> save(E e) throws Exception {
+		ResponseGeneric<E> responseGeneric = new ResponseGeneric<>();
+		
 		try {
-			return this.iBaseRepository.save(e);
+			final E guardar = this.iBaseRepository.save(e);
+			if( guardar != null ) {
+				responseGeneric.setCodeValue(200);
+				responseGeneric.setMensaje("Se guardo correctamente");
+			}else {
+
+				responseGeneric.setMensaje("Ocurrio un error al guardar");
+			}
+			
+			return responseGeneric;
 		}catch(Exception exception)
 		{
 

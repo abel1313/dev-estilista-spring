@@ -2,7 +2,6 @@ package com.estilista.app.controller;
 
 import com.estilista.app.model.Direccion;
 import com.estilista.app.service_api.DireccionServiceImpl;
-import com.estilista.app.services.IDireccioneService;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

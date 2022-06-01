@@ -1,4 +1,7 @@
 package com.estilista.app.model;
+
+
+
 import javax.persistence.Column;
 
 import lombok.AllArgsConstructor;
@@ -9,23 +12,21 @@ import lombok.ToString;
 
 /**
  * @author Abel Tiburcio
- * @param nombreUsuario
- * @param contrasenaUsuario
+ * @param tipoPieza
+ * @param precio
  * */
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Usuario extends SuperClase{
+public class TamanioProducto extends SuperClase{
 
-	
-			  			  
-			  @Column( name = "NOMBRE_USUARIO")
-			  private String nombreUsuario;
-			  
-			  @Column( name = "CONTRASENA_USUARIO")
-			  private String contrasenaUsuario;
-			  
-			  
+	  @Column( name = "TIPO_PIEZA")
+	  private String tipoPieza;
+	  
+	  @Column( name = "PRECIO")
+	  private Double precio;
+	  
+	  
 }

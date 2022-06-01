@@ -1,7 +1,11 @@
 package com.estilista.app.controller;
 
+import java.util.List;
+import java.util.Optional;
+
 import javax.validation.Valid;
 
+import com.estilista.app.model.ResponseGeneric;
 import com.estilista.app.model.SuperClase;
 import com.estilista.app.service_api.BaseServiceImpl;
 
@@ -25,13 +29,13 @@ public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseSer
 	@Override
 	@GetMapping("")
 	public ResponseEntity<?> getAll() throws Exception {
-		// TODO Auto-generated method stub
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(service.getAll());
+			return ResponseEntity.status(HttpStatus.OK).body(this.service.getAll() );
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body("{'error':'Error. Verificar ' " + e.getMessage() + " '  '} ");
 		}
+		
 	}
 
 	@Override
@@ -42,9 +46,19 @@ public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseSer
 
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getOne(@PathVariable Integer id) throws Exception {
+	public ResponseEntity<?> getOne(@PathVariable final Integer id) throws Exception {
+		ResponseGeneric<E> responseGeneric = new ResponseGeneric<>();
+		
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(service.getOne(id));
+			final Optional<E> e = service.getOne(id);
+			if( e.isPresent() ) {
+				responseGeneric.setDatos(e.get());
+				responseGeneric.setMensaje("Dato encontrado correctamente");
+			}else {
+				responseGeneric.setDatos(null);
+				responseGeneric.setMensaje("El dato que busca no se encontro");
+			}
+			return ResponseEntity.status(HttpStatus.OK).body(responseGeneric);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error':'Error. Verificar'} ");
 		}
@@ -53,27 +67,28 @@ public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseSer
 	@Override
 	@PostMapping("guardar")
 	public ResponseEntity<?> saveE(@Valid @RequestBody E e) throws Exception {
-
-		return ResponseEntity.status(HttpStatus.OK).body(service.saveE(e));
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(this.service.save(e));
+		} catch (Exception ee) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error':'Error. Verificar'} ");
+		}
 	}
 
 	@Override
 	@PostMapping("")
-	public ResponseEntity<?> save(@Valid @RequestBody E e) throws Exception {
-		if (e != null) {
-			try {
-				return ResponseEntity.status(HttpStatus.OK).body(service.save(e));
-			} catch (Exception es) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND)
-						.body("{'error': 'Error. Verifica ' " + es.getMessage() + " ' } ");
-			}
+	public ResponseEntity<?> save(@Valid @RequestBody final E e) throws Exception {
+		try {
+
+			return ResponseEntity.status(HttpStatus.OK).body( this.service.save(e));
+		} catch (Exception ee) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error':'Error. Verificar'} ");
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error':'Error. Verificar'} ");
+		
 	}
 
 	@Override
 	@PutMapping("")
-	public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody E e) throws Exception {
+	public ResponseEntity<?> update(@PathVariable final Integer id, @RequestBody final E e) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(service.update(id, e));

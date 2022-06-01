@@ -4,7 +4,6 @@ package com.estilista.app.model;
 import javax.persistence.Column;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,18 +19,17 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @ToString
 public class DetalleCorteCita extends SuperClase{ 
 
 	  @Column( name = "SUB_TOTAL")
-	  private double subTotal;
+	  private double subTotalDetalleCorteCita;
 	  
 	  @Column( name = "VENTA_ID")
-	  private Venta venta;
+	  private Venta ventaDetalleCorteCita;
 	  	  
 	  @Column( name = "CITA_ID")
-	  private Cita citaDetalleCorte;
+	  private Cita citaDetalleCorteCita;
 	  
 	
 }

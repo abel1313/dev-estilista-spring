@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.estilista.app.dto.RespuestaDTO;
+import com.estilista.app.model.ResponseGeneric;
 import com.estilista.app.model.SuperClase;
 
 import org.springframework.validation.annotation.Validated;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface IBaseService <E extends SuperClase, ID extends Serializable>{
 	
-	public List<E> getAll() throws Exception;
+	public ResponseGeneric<List<E>> getAll() throws Exception;
 	public Optional<E> getOne(ID id) throws Exception;
-	public E update(ID id, E e) throws Exception;
-	public E save(@RequestBody @Validated E e) throws Exception;
+	public ResponseGeneric<E> update(ID id, E e) throws Exception;
+	public ResponseGeneric<E> save(@RequestBody @Validated E e) throws Exception;
 	public boolean delete(ID id) throws Exception;
 	
 

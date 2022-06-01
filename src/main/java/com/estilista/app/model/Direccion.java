@@ -3,6 +3,8 @@ package com.estilista.app.model;
 
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 
@@ -18,11 +20,13 @@ import lombok.ToString;
  * @param calleDireccion
  * @param coloniaDireccion
  * */
+@Entity
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Table(name = "DIRECCIONES")
 public class Direccion extends SuperClase{
 
 	  @Column( name = "ESTADO_DIRECCION")
