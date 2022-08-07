@@ -5,6 +5,8 @@ import com.estilista.app.repositories.IBaseRepository;
 import com.estilista.app.repositories.IDireccionReporitory;
 import com.estilista.app.services.IDireccioneService;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +21,13 @@ public class DireccionServiceImpl extends BaseServiceImpl<Direccion, Integer>imp
 		super(iBaseRepository);
 		
 	}
+	@Override
+	public List<Direccion> obtenerTodos() {
+		return iDireccionReporitory.findAll();
+	}
+	
+	
+	
+
 
 }

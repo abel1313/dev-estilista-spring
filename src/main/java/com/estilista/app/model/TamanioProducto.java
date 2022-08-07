@@ -3,6 +3,8 @@ package com.estilista.app.model;
 
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +22,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Entity
+@Table( name = "tamano_productos" )
 public class TamanioProducto extends SuperClase{
 
 	  @Column( name = "TIPO_PIEZA")

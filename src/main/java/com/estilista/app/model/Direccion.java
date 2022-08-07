@@ -5,6 +5,7 @@ package com.estilista.app.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 
@@ -30,6 +31,7 @@ import lombok.ToString;
 public class Direccion extends SuperClase{
 
 	  @Column( name = "ESTADO_DIRECCION")
+	  @NotNull(message = "El campo es requerido")
 	  private String estadoDireccion;
 	  
 	  @Column( name = "MUNICIPIO_DIRECCION")

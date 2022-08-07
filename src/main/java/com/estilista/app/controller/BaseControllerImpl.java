@@ -1,6 +1,5 @@
 package com.estilista.app.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -66,11 +65,13 @@ public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseSer
 
 	@Override
 	@PostMapping("guardar")
-	public ResponseEntity<?> saveE(@Valid @RequestBody E e) throws Exception {
+	public ResponseEntity<?> saveE( @RequestBody E e) throws Exception {
 		try {
+			
 			return ResponseEntity.status(HttpStatus.OK).body(this.service.save(e));
 		} catch (Exception ee) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error':'Error. Verificar'} ");
+			System.err.println("si llefo cpontroler ");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error':'Error. Verificar CONTROLER'} ");
 		}
 	}
 

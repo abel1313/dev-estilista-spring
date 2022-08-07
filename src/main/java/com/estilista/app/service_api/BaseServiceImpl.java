@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.DataBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.estilista.app.dto.RespuestaDTO;
@@ -69,12 +70,16 @@ implements IBaseService<E, ID> {
 	}
 	@Override
 	public ResponseGeneric<E> save(E e) throws Exception {
-		ResponseGeneric<E> responseGeneric = new ResponseGeneric<>();
 		
+		System.err.println("si llefo");
+		ResponseGeneric<E> responseGeneric = new ResponseGeneric<>();
+
 		try {
+
 			final E guardar = this.iBaseRepository.save(e);
 			if( guardar != null ) {
 				responseGeneric.setCodeValue(200);
+				responseGeneric.setDatos(guardar);
 				responseGeneric.setMensaje("Se guardo correctamente");
 			}else {
 
@@ -84,7 +89,7 @@ implements IBaseService<E, ID> {
 			return responseGeneric;
 		}catch(Exception exception)
 		{
-
+			System.err.println("si llefo cpontroler service");
 			 throw new ResourceNotFoundException(exception.getMessage());
 //			throw new Exception(exception.getMessage());
 		}
