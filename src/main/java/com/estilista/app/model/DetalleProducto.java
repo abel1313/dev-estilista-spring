@@ -2,7 +2,18 @@ package com.estilista.app.model;
 
 
 
+import java.io.Serializable;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,16 +32,31 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class DetalleProducto extends SuperClase{
+@Entity
+@Table(name = "DETALLE_PRODUCTO")
+public class DetalleProducto extends SuperClase implements Serializable{
 
-	  @Column( name = "SUB_TOTAL")
+	  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Column( name = "SUB_TOTAL")
 	  private double subTotal;
 	  
-	  @Column( name = "VENTA_ID")
+		@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+		@JsonBackReference
+		@JoinColumn(name = "VENTA_ID")
 	  private Venta ventaDetalleProducto;
 	  
-	  @Column( name = "PRODUCTO_ID")
+		@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+		@JsonBackReference
+		@JoinColumn(name = "PRODUCTO_ID")
 	  private Producto productoDetalle;
+	  
+	  @OneToOne
+	  @JoinColumn( name = "estatus_id")
+	  private Estatus estatus;
 
 	
 }

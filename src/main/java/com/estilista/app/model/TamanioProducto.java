@@ -2,6 +2,8 @@ package com.estilista.app.model;
 
 
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -24,13 +26,18 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table( name = "tamano_productos" )
-public class TamanioProducto extends SuperClase{
+public class TamanioProducto extends SuperClase implements Serializable{
 
-	  @Column( name = "TIPO_PIEZA")
+	  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1469891203612679142L;
+
+	@Column( name = "TIPO_PIEZA")
 	  private String tipoPieza;
 	  
 	  @Column( name = "PRECIO")
-	  private Double precio;
+	  private Double precioPieza;
 	  
 	  
 }

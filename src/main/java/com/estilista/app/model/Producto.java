@@ -28,12 +28,22 @@ import lombok.ToString;
 @Table( name = "PRODUCTOS" )
 public class Producto extends SuperClase {
 
-	  @Column( name = "NOMBRE_PRODUCTO")
+	  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	@Column( name = "NOMBRE_PRODUCTO")
 	  private String nombreProducto;
 	  
 	  
 	  @OneToOne( cascade = CascadeType.ALL)
 	  @JoinColumn( name = "TIPO_PIEZA_ID")
-	  private TamanioProducto tipoPieza;
+	  private TamanioProducto tamanoProducto;
+	  
+	  @OneToOne( cascade = CascadeType.ALL)
+	  @JoinColumn( name = "ESTATUS_ID")
+	  private Estatus estatusPieza;
 	  
 }

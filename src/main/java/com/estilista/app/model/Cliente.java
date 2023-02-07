@@ -29,7 +29,12 @@ import lombok.ToString;
 @Table(name = "CLIENTES")
 public class Cliente extends SuperClase{
 	
-	  @OneToOne(cascade = CascadeType.ALL)
+	  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4687714862919741080L;
+	
+	@OneToOne(cascade = CascadeType.ALL)
 	  @JoinColumn( name = "PERSONA_ID")
 	  private Persona personaCliente;
 	

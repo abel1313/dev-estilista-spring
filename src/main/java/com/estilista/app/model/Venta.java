@@ -1,8 +1,11 @@
 package com.estilista.app.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -25,10 +28,17 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Venta extends SuperClase{
+@Entity
+@Table( name = "Ventas")
+public class Venta extends SuperClase implements Serializable{
 
 	
-			  @Column( name = "USUARIO_ID")
+			  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8957892102427904602L;
+
+			@Column( name = "USUARIO_ID")
 			  @NotNull( message = "Es requerido")
 			  private Usuario usuarioVenta;
 			  			  

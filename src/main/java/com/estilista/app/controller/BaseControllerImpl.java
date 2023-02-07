@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.estilista.app.exception.ResourceNotFoundException;
 import com.estilista.app.model.ResponseGeneric;
 import com.estilista.app.model.SuperClase;
 import com.estilista.app.service_api.BaseServiceImpl;
@@ -32,7 +33,7 @@ public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseSer
 			return ResponseEntity.status(HttpStatus.OK).body(this.service.getAll() );
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("{'error':'Error. Verificar ' " + e.getMessage() + " '  '} ");
+					.body(new ResourceNotFoundException(e.getMessage()));
 		}
 		
 	}
@@ -52,6 +53,7 @@ public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseSer
 			final Optional<E> e = service.getOne(id);
 			if( e.isPresent() ) {
 				responseGeneric.setDatos(e.get());
+				responseGeneric.setCodeValue(200);
 				responseGeneric.setMensaje("Dato encontrado correctamente");
 			}else {
 				responseGeneric.setDatos(null);
@@ -59,7 +61,7 @@ public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseSer
 			}
 			return ResponseEntity.status(HttpStatus.OK).body(responseGeneric);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error':'Error. Verificar'} ");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResourceNotFoundException(e.getMessage()));
 		}
 	}
 
@@ -71,7 +73,7 @@ public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseSer
 			return ResponseEntity.status(HttpStatus.OK).body(this.service.save(e));
 		} catch (Exception ee) {
 			System.err.println("si llefo cpontroler ");
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error':'Error. Verificar CONTROLER'} ");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResourceNotFoundException(ee.getMessage()));
 		}
 	}
 
@@ -82,7 +84,7 @@ public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseSer
 
 			return ResponseEntity.status(HttpStatus.OK).body( this.service.save(e));
 		} catch (Exception ee) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error':'Error. Verificar'} ");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResourceNotFoundException(ee.getMessage()));
 		}
 		
 	}
@@ -94,7 +96,7 @@ public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseSer
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(service.update(id, e));
 		} catch (Exception es) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error': 'Error. Verifica' } ");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResourceNotFoundException(es.getMessage()));
 		}
 	}
 
@@ -105,7 +107,7 @@ public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseSer
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(service.delete(id));
 		} catch (Exception es) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error': 'Error. Verifica' } ");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResourceNotFoundException(es.getMessage()));
 		}
 	}
 

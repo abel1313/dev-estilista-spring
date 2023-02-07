@@ -1,6 +1,8 @@
 package com.estilista.app.model;
 
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 
 import lombok.AllArgsConstructor;
@@ -19,9 +21,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class TipoCorte extends SuperClase{
+public class TipoCorte extends SuperClase implements Serializable{
 
-	  @Column( name = "NOMBRE_CORTE")
+	  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4265807925337385875L;
+
+	@Column( name = "NOMBRE_CORTE")
 	  private String nombreCorte;
 	  
 	  @Column( name = "PRECIO")

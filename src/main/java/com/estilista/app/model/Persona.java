@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -34,7 +35,12 @@ import lombok.ToString;
 @Table(name = "PERSONAS")
 public class Persona extends SuperClase{
 
-	  @Column( name = "NOMBRE_PERSONA")
+	  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -186037016372424218L;
+
+	@Column( name = "NOMBRE_PERSONA")
 	  private String nombrePersona;
 	  
 	  @Column( name = "PATERNO_PERSONA")
@@ -52,7 +58,7 @@ public class Persona extends SuperClase{
 	  @Column( name = "NUMERO_TELEFONO_PERSONA")
 	  private String numeroTelefonoPersona;
 	  
-	  @OneToOne(cascade = CascadeType.ALL)
+	  @ManyToOne(cascade = CascadeType.ALL)
 	  @JoinColumn( name = "DIRECCION_ID")
 	  private Direccion direccionPersona;
 	

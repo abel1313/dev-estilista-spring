@@ -1,6 +1,15 @@
 package com.estilista.app.model;
 
+import java.io.Serializable;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,12 +27,21 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Rol extends SuperClase{
+@Entity
+@Table(name="roles")
+public class Rol extends SuperClase implements Serializable{
 	  
-	  @Column( name = "NOMBRE_ROLES")
+	  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6954975536191415728L;
+
+	@Column( name = "NOMBRE_ROLES")
 	  private String nombreRol;
 	  
-	  @Column( name = "USUARIO_ID")
+	  @ManyToOne(cascade = CascadeType.ALL)
+	  @JoinColumn(name = "USUARIO_ID")
+	  @JsonBackReference
 	  private Usuario usuarioRol;
 	  
 	  
