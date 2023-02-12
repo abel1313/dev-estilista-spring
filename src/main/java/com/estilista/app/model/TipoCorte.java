@@ -3,7 +3,12 @@ package com.estilista.app.model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +26,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Entity
+@Table(name = "TIPO_CORTE")
 public class TipoCorte extends SuperClase implements Serializable{
 
 	  /**
@@ -33,5 +40,8 @@ public class TipoCorte extends SuperClase implements Serializable{
 	  
 	  @Column( name = "PRECIO")
 	  private Double precioTipoCorte;
+	  
+	  
+
 	  
 }

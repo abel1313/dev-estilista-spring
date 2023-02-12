@@ -3,6 +3,7 @@ package com.estilista.app.model;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -24,6 +25,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Table(name = "citas")
 public class Cita extends SuperClase{
 
 	  @Column( name = "USUARIO_ID")

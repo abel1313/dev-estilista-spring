@@ -22,7 +22,11 @@ import lombok.ToString;
 @ToString
 public class Menu extends SuperClase{
 
-	  @Column( name = "NOMBRE_MENU")
+	  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@Column( name = "NOMBRE_MENU")
 	  private String nombreMenu;
 	
 	

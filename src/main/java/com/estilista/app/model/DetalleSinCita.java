@@ -23,7 +23,12 @@ import lombok.ToString;
 @ToString
 public class DetalleSinCita extends SuperClase{
 
-	  @Column( name = "SUB_TOTAL")
+	  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Column( name = "SUB_TOTAL")
 	  private double subTotal;
 	  
 	  @Column( name = "VENTA_ID")
