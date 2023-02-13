@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.DataBinder;
@@ -21,6 +23,7 @@ import com.estilista.app.services.IBaseService;
 public abstract class BaseServiceImpl<E extends SuperClase, ID extends Serializable> 
 implements IBaseService<E, ID> {
 
+	protected Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
 	protected IBaseRepository<E, ID> iBaseRepository;
 	
 	public BaseServiceImpl( IBaseRepository<E, ID> iBaseRepository )
