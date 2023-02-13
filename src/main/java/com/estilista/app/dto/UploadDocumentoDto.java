@@ -1,16 +1,19 @@
 package com.estilista.app.dto;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
+import java.util.List;
 
-@Data
-public class UploadDocumentoDto {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class UploadDocumentoDto extends SuperDto {
 
-    private int id;
-    private String base64;
-    private String nombreImagen;
-    private String extencion;
+    TipoCorteDto tipoCorte;
+    List<ImagenDto> imagenes;
 
 }
