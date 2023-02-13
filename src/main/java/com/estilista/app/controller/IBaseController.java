@@ -14,19 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface IBaseController<E extends SuperClase, ID extends Serializable>
 {
-	public ResponseEntity<?> getAll() throws Exception;
-
-	public ResponseEntity<?> getAllE() throws Exception;
+	ResponseEntity<?> getAll() throws Exception;
+	ResponseEntity<?> getAllE() throws Exception;
+	ResponseEntity<?> getOne(@PathVariable ID id) throws Exception;
+	ResponseEntity<?> save(@Valid @RequestBody E e) throws Exception;
+	ResponseEntity<?> saveE(@Valid @RequestBody E e) throws Exception;
+	ResponseEntity<?> update(@PathVariable ID id,@RequestBody E e) throws Exception;
+	ResponseEntity<?> delete(@PathVariable ID id) throws Exception;
 	
-	
-	public ResponseEntity<?> getOne(@PathVariable ID id) throws Exception;
-	public ResponseEntity<?> save(@Valid @RequestBody E e) throws Exception;
-
-	public ResponseEntity<?> saveE(@Valid @RequestBody E e) throws Exception;
-	
-	public ResponseEntity<?> update(@PathVariable ID id,@RequestBody E e) throws Exception;
-	public ResponseEntity<?> delete(@PathVariable ID id) throws Exception;
-	
-
-	public ResponseEntity<?> obtenerDatosId(@RequestBody E e) throws Exception;
+	ResponseEntity<?> obtenerDatosId(@RequestBody E e) throws Exception;
 }

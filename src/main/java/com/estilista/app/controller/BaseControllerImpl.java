@@ -9,6 +9,8 @@ import com.estilista.app.model.ResponseGeneric;
 import com.estilista.app.model.SuperClase;
 import com.estilista.app.service_api.BaseServiceImpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseServiceImpl<E, Integer>>
 		implements IBaseController<E, Integer> {
 
+	protected Logger logger = LoggerFactory.getLogger(BaseControllerImpl.class);
 	@Autowired
 	protected S service;
 

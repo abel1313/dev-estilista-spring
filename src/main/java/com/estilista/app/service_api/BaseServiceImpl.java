@@ -23,10 +23,11 @@ import com.estilista.app.services.IBaseService;
 public abstract class BaseServiceImpl<E extends SuperClase, ID extends Serializable> 
 implements IBaseService<E, ID> {
 
+	protected final String urlDirectory = ".//src//main//resources//imagenes//";
 	protected Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
 	protected IBaseRepository<E, ID> iBaseRepository;
 	
-	public BaseServiceImpl( IBaseRepository<E, ID> iBaseRepository )
+	public BaseServiceImpl( final IBaseRepository<E, ID> iBaseRepository )
 	{
 			this.iBaseRepository = iBaseRepository;
 	}

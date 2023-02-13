@@ -27,9 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("proyecto/direccion")
 public class DireccionController extends BaseControllerImpl<Direccion, DireccionServiceImpl>{
     
-	@Autowired
+
 	private IDireccioneService iDireccioneService;
-	
+	@Autowired
+	public void setiDireccioneService(final IDireccioneService iDireccioneService) {
+		this.iDireccioneService = iDireccioneService;
+	}
+
 	@InitBinder
     protected void initBinder(WebDataBinder binder) {
         binder.setValidator(new ValidarDireccion()); // registramos el validador

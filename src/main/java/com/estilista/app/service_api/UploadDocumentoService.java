@@ -8,11 +8,14 @@ import com.estilista.app.model.ResponseGeneric;
 import com.estilista.app.model.TipoCorte;
 import com.estilista.app.model.UploadDocumento;
 import com.estilista.app.repositories.IBaseRepository;
+import com.estilista.app.repositories.IUploadDocumentsRepository;
 import com.estilista.app.services.ICorteService;
 import com.estilista.app.services.IUploadDocumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -25,18 +28,26 @@ import java.util.stream.Collectors;
 
 @Service
 public class UploadDocumentoService extends BaseServiceImpl<UploadDocumento, Integer>implements IUploadDocumentoService {
-    private final String urlDirectory = ".//src//main//resources//imagenes//";
-    @Autowired
+
+
     private ICorteService iCorteService;
+    private IUploadDocumentsRepository iUploadDocumentsRepository;
+
     private ResponseGeneric<UploadDocumento> uploadDocumento;
 
-    @Autowired
-    private IUploadDocumentoService iUploadDocumentoService;
 
-    public UploadDocumentoService(IBaseRepository<UploadDocumento, Integer> iBaseRepository) {
+
+    public UploadDocumentoService(final IBaseRepository<UploadDocumento, Integer> iBaseRepository) {
         super(iBaseRepository);
     }
-
+    @Autowired
+    public void setiCorteService(ICorteService iCorteService) {
+        this.iCorteService = iCorteService;
+    }
+    @Autowired
+    public void setiUploadDocumentsRepository(IUploadDocumentsRepository iUploadDocumentsRepository) {
+        this.iUploadDocumentsRepository = iUploadDocumentsRepository;
+    }
 
     @Override
     public ResponseGeneric<Boolean> upload(UploadDocumentoDto uploadDocumentoDto) throws Exception {
@@ -61,7 +72,7 @@ public class UploadDocumentoService extends BaseServiceImpl<UploadDocumento, Int
                     try {
 
                         final Corte corteSave = responseGenericCorte.getDatos();
-                        this.uploadDocumento = iUploadDocumentoService.save(new UploadDocumento(f.getNombreImagen(),f.getExtencionImagen(),corteSave));
+                        this.uploadDocumento = save(new UploadDocumento(f.getNombreImagen(),f.getExtencionImagen(),corteSave));
                         FileWriter fw = new FileWriter(urlDirectory
                                 .concat(String.valueOf(new Date().getTime()))
                                 .concat("-")
@@ -87,7 +98,7 @@ public class UploadDocumentoService extends BaseServiceImpl<UploadDocumento, Int
         }else{
             responseGeneric.setCode("200 OK");
             responseGeneric.setMensaje("El corte no se pudo registrar correctamente");
-            responseGeneric.setDatos(true);
+            responseGeneric.setDatos(false);
         }
         return responseGeneric ;
     }
@@ -154,5 +165,20 @@ public class UploadDocumentoService extends BaseServiceImpl<UploadDocumento, Int
         }
 
         return responseGeneric;
+    }
+
+    @Override
+    public ResponseGeneric<Page<UploadDocumento>> getAllPag(@PathVariable final int page,@PathVariable final int size) throws Exception {
+        final Pageable pageable = PageRequest.of(page,size, Sort.by("nombreImagen"));
+        final ResponseGeneric<Page<UploadDocumento>> responseGeneric = new ResponseGeneric<>();
+        final Page<UploadDocumento> pageResult = this.iUploadDocumentsRepository.findAll(pageable);
+        if( !pageResult.isEmpty() ){
+            responseGeneric.setCodeValue(200);
+            responseGeneric.setCode("200 OK");
+            responseGeneric.setMensaje("Se encontraron registros");
+            responseGeneric.setDatos(pageResult);
+        }
+        return  responseGeneric;
+
     }
 }

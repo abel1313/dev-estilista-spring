@@ -17,9 +17,14 @@ import com.estilista.app.services.IProductoService;
 @RequestMapping("proyecto/productos")
 public class ProductoController extends BaseControllerImpl<Producto, ProductoServiceImp>{
 
-	@Autowired
+
 	private IProductoService iProductoService;
-	
+
+	@Autowired
+	public void setiProductoService(final IProductoService iProductoService) {
+		this.iProductoService = iProductoService;
+	}
+
 	@GetMapping("/buscarBy/{nombre}")
 	public ResponseEntity<List<Producto>>buscarProductos(@PathVariable final String nombre){
 		return ResponseEntity.status(HttpStatus.OK).body(iProductoService.findByNombreProductoContaining(nombre));

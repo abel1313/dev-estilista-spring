@@ -22,7 +22,6 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "CORTES")
 public class Corte extends SuperClase{
@@ -41,6 +40,11 @@ public class Corte extends SuperClase{
 	@JsonManagedReference
 	private Set<UploadDocumento> listaCortes;
 
-
-
+	@Override
+	public String toString() {
+		return "Corte{" +
+				"tipoCorte=" + tipoCorte +
+				", listaCortes=" + listaCortes +
+				'}';
+	}
 }

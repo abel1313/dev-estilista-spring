@@ -20,9 +20,13 @@ import com.estilista.app.services.IDetalleProductoService;
 @RequestMapping("proyecto/detalle-producto")
 public class DetalleProductoController extends BaseControllerImpl<DetalleProducto, DetalleProductoServiceImpl>{
 
-	@Autowired
+
 	private IDetalleProductoService iDetalleProductoService;
-	
+	@Autowired
+	public void setiDetalleProductoService(final IDetalleProductoService iDetalleProductoService) {
+		this.iDetalleProductoService = iDetalleProductoService;
+	}
+
 	@PostMapping("save")
 	public ResponseEntity<?> saveDetalle(@RequestBody List<DetalleProductoDto> detalleProductoDto) throws Exception {
 		try {

@@ -11,7 +11,7 @@ import com.estilista.app.services.IUsuarioServide;
 @Service
 public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer>implements IUsuarioServide{
 
-	public UsuarioServiceImpl(IBaseRepository<Usuario, Integer> iBaseRepository) {
+	public UsuarioServiceImpl(final IBaseRepository<Usuario, Integer> iBaseRepository) {
 		super(iBaseRepository);
 		// TODO Auto-generated constructor stub
 	}

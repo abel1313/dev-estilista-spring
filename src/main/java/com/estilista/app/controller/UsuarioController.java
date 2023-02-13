@@ -12,4 +12,5 @@ import com.estilista.app.service_api.UsuarioServiceImpl;
 @RequestMapping("proyecto/usuarios")
 public class UsuarioController  extends BaseControllerImpl<Usuario, UsuarioServiceImpl> {
 
+
 }

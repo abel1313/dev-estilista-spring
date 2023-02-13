@@ -15,12 +15,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class DireccionServiceImpl extends BaseServiceImpl<Direccion, Integer>implements IDireccioneService
 {
-	@Autowired
+
 	private IDireccionReporitory iDireccionReporitory;
-	public DireccionServiceImpl(IBaseRepository<Direccion, Integer> iBaseRepository) {
+	public DireccionServiceImpl(final IBaseRepository<Direccion, Integer> iBaseRepository) {
 		super(iBaseRepository);
-		
 	}
+	@Autowired
+	public void setiDireccionReporitory(final IDireccionReporitory iDireccionReporitory) {
+		this.iDireccionReporitory = iDireccionReporitory;
+	}
+
 	@Override
 	public List<Direccion> obtenerTodos() {
 		return iDireccionReporitory.findAll();

@@ -13,14 +13,18 @@ import com.estilista.app.services.IProductoService;
 @Service
 public class ProductoServiceImp extends BaseServiceImpl<Producto, Integer>implements IProductoService{
 
-	@Autowired
+
 	private IProductoRepository iProductoRepository;
 	
-	public ProductoServiceImp(IBaseRepository<Producto, Integer> iBaseRepository) {
+	public ProductoServiceImp(final IBaseRepository<Producto, Integer> iBaseRepository) {
 		super(iBaseRepository);
 		// TODO Auto-generated constructor stub
 	}
-	
+	@Autowired
+	public void setiProductoRepository(final IProductoRepository iProductoRepository) {
+		this.iProductoRepository = iProductoRepository;
+	}
+
 	@Override
 	public List<Producto> findByNombreProductoContaining(@Param("nombre") String nombre ){
 		return this.iProductoRepository.findByNombreProductoContaining(nombre);

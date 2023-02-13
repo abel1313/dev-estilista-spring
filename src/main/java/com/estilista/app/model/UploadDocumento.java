@@ -10,7 +10,6 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "UPLOAD_DOCUMENTS")
 public class UploadDocumento extends SuperClase{
@@ -36,4 +35,13 @@ public class UploadDocumento extends SuperClase{
         this.corteTipo = corteTipo;
     }
 
+
+    @Override
+    public String toString() {
+        return "UploadDocumento{" +
+                "nombreImagen='" + nombreImagen + '\'' +
+                ", extencion='" + extencion + '\'' +
+                ", corteTipo=" + corteTipo +
+                '}';
+    }
 }

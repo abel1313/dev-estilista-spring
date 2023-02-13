@@ -22,13 +22,15 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @Service
 public class DetalleProductoServiceImpl extends BaseServiceImpl<DetalleProducto, Integer>implements IDetalleProductoService
 {
+	private IDetalleProductoRepository iDetalleProductoRepository;
 	public DetalleProductoServiceImpl(IBaseRepository<DetalleProducto, Integer> iBaseRepository) {
 		super(iBaseRepository);
 		// TODO Auto-generated constructor stub
 	}
-
 	@Autowired
-	private IDetalleProductoRepository iDetalleProductoRepository;
+	public void setiDetalleProductoRepository(final IDetalleProductoRepository iDetalleProductoRepository) {
+		this.iDetalleProductoRepository = iDetalleProductoRepository;
+	}
 
 	@Override
 	public List<DetalleProducto> saveDetalle(@RequestBody final List<DetalleProductoDto> detalleProductoDto) throws Exception {
