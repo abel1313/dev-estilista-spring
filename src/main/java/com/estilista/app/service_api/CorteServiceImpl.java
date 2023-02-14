@@ -37,7 +37,7 @@ public class CorteServiceImpl extends BaseServiceImpl<Corte, Integer>implements 
 	}
 
 	@Override
-	public ResponseGeneric<Page<CorteDto>> getAllCortePageService(@PathVariable final int page,
+	public ResponseGeneric<List<CorteDto> > getAllCortePageService(@PathVariable final int page,
 															@PathVariable final int size) throws Exception {
 
 		final Pageable pageable = PageRequest.of(page,size, Sort.by("id"));
@@ -97,11 +97,14 @@ public class CorteServiceImpl extends BaseServiceImpl<Corte, Integer>implements 
 			corteDto.setImagenes(imagenDtoList);
 			return corteDto;
 		}).collect(Collectors.toList());
-		Page<CorteDto> corteDtoPage = new PageImpl<>(lista);
-
-		final ResponseGeneric<Page<CorteDto>> responseGeneric = new ResponseGeneric<>();
-		responseGeneric.setDatos(corteDtoPage);
-
+		final Page<CorteDto> corteDtoPage = new PageImpl<>(lista);
+		final ResponseGeneric<List<CorteDto> > responseGeneric = new ResponseGeneric<>();
+		if( !corteDtoPage.isEmpty()){
+			responseGeneric.setCode("200 OK");
+			responseGeneric.setCodeValue(200);
+			responseGeneric.setMensaje("Se encotraron registros");
+			responseGeneric.setDatos(corteDtoPage.getContent());
+		}
 		return responseGeneric;
 	}
 
