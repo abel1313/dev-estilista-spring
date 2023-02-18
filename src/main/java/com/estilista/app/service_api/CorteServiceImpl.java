@@ -6,6 +6,8 @@ import com.estilista.app.dto.TipoCorteDto;
 import com.estilista.app.dto.UploadDocumentoDto;
 import com.estilista.app.model.ResponseGeneric;
 import com.estilista.app.model.TipoCorte;
+import com.estilista.app.model.UploadDocumento;
+import com.estilista.app.repositories.IUploadDocumentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -17,15 +19,17 @@ import com.estilista.app.services.ICorteService;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class CorteServiceImpl extends BaseServiceImpl<Corte, Integer>implements ICorteService {
 
 	private ICorteRepository iCorteRepository;
+	private IUploadDocumentsRepository iUploadDocumentsRepository;
+
+	private ResponseGeneric<UploadDocumento> uploadDocumento;
+
 
 	public CorteServiceImpl(final IBaseRepository<Corte, Integer> iBaseRepository) {
 		super(iBaseRepository);
@@ -34,6 +38,10 @@ public class CorteServiceImpl extends BaseServiceImpl<Corte, Integer>implements 
 	@Autowired
 	public void setiCorteRepository(final ICorteRepository iCorteRepository) {
 		this.iCorteRepository = iCorteRepository;
+	}
+	@Autowired
+	public void setiUploadDocumentsRepository(final IUploadDocumentsRepository iUploadDocumentsRepository) {
+		this.iUploadDocumentsRepository = iUploadDocumentsRepository;
 	}
 
 	@Override
@@ -106,6 +114,60 @@ public class CorteServiceImpl extends BaseServiceImpl<Corte, Integer>implements 
 			responseGeneric.setDatos(corteDtoPage.getContent());
 		}
 		return responseGeneric;
+	}
+
+	@Override
+	public ResponseGeneric<Boolean> saveCorte(UploadDocumentoDto uploadDocumentoDto) throws Exception {
+		ResponseGeneric<Boolean> responseGeneric = new ResponseGeneric<>();
+		// Get the file and save it somewhere
+		final Corte corte = new Corte();
+		corte.setId(uploadDocumentoDto.getId());
+		final TipoCorteDto tipoCorteDto = uploadDocumentoDto.getTipoCorte();
+		corte.setTipoCorte(new TipoCorte(tipoCorteDto.getNombreCorte(), tipoCorteDto.getPrecioTipoCorte()));
+		final Corte responseGenericCorte = iCorteRepository.save(corte);
+
+		if(Objects.nonNull(responseGenericCorte)	 ){
+			File directorio = new File(urlDirectory).getAbsoluteFile();
+			if (!directorio.exists()) {
+				if (directorio.mkdirs()) {
+					logger.info("Directorio creado");
+				} else {
+					logger.error("Error al crear directorio");
+				}
+			}
+			try {
+				uploadDocumentoDto.getImagenes().stream().forEach(f->{
+					try {
+
+						final UploadDocumento uploadDocumento1= this.iUploadDocumentsRepository.save(new UploadDocumento(f.getNombreImagen(),f.getExtencionImagen(),responseGenericCorte));
+						FileWriter fw = new FileWriter(urlDirectory
+								.concat(String.valueOf(new Date().getTime()))
+								.concat("-")
+								.concat(String.valueOf(uploadDocumento1.getId()))
+								.concat(".txt"));
+						BufferedWriter bw = new BufferedWriter(fw);
+						bw.write(f.getBase64Imagen());
+						bw.close();
+					} catch (Exception e) {
+						logger.error(" Ocurrio un error al escribir el documento UploadDocumentoService, upload {} ",e.getMessage());
+						throw new RuntimeException(e);
+					}
+				});
+
+				responseGeneric.setCode("200 OK");
+				responseGeneric.setMensaje("Se registro el corte y se agregaron las imagenes");
+				responseGeneric.setCodeValue(200);
+				responseGeneric.setDatos(true);
+			}catch (Exception e){
+				logger.error(" Ocurrio un error al escribir el documento UploadDocumentoService, upload {} ",e.getMessage());
+				throw new RuntimeException(e);
+			}
+		}else{
+			responseGeneric.setCode("200 OK");
+			responseGeneric.setMensaje("El corte no se pudo registrar correctamente");
+			responseGeneric.setDatos(false);
+		}
+		return responseGeneric ;
 	}
 
 }

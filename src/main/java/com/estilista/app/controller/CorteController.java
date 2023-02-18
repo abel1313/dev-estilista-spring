@@ -1,6 +1,7 @@
 package com.estilista.app.controller;
 
 import com.estilista.app.dto.CorteDto;
+import com.estilista.app.dto.UploadDocumentoDto;
 import com.estilista.app.model.Corte;
 import com.estilista.app.model.Producto;
 import com.estilista.app.model.ResponseGeneric;
@@ -13,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,19 +34,41 @@ public class CorteController extends BaseControllerImpl<Corte, CorteServiceImpl>
     @GetMapping(value = "/getAllPage/{page}/{size}")
     public ResponseEntity<ResponseGeneric<List<CorteDto>>> getAllCortePage(@PathVariable final int page, @PathVariable final int size) {
 
-        Producto p = new Producto();
-        final Errors errors = new BeanPropertyBindingResult(p, Producto.class.getName());
-        this.validator.validate(p, errors);
-        if( errors.hasErrors()){
-        logger.error(" error {} ", errors.getFieldErrors());
-        return null;
-        }
+//        Producto p = new Producto();
+//        final Errors errors = new BeanPropertyBindingResult(p, Producto.class.getName());
+//        this.validator.validate(p, errors);
+//        if( errors.hasErrors()){
+//        logger.error(" error {} ", errors.getFieldErrors());
+//        return null;
+//        }
         ResponseGeneric<List<CorteDto>> responseGeneric = new ResponseGeneric<>();
         try{
             responseGeneric = this.iCorteService.getAllCortePageService(page,size);
             return ResponseEntity.status(HttpStatus.OK).body(responseGeneric);
         }catch (Exception e){
             logger.error(" {} ",e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseGeneric);
+        }
+    }
+
+    @PostMapping(value = "/saveCorte")
+    public ResponseEntity<ResponseGeneric<Boolean>> getAllCortePage(@RequestBody UploadDocumentoDto uploadDocumentoDto) {
+
+//        Producto p = new Producto();
+//        final Errors errors = new BeanPropertyBindingResult(p, Producto.class.getName());
+//        this.validator.validate(p, errors);
+//        if( errors.hasErrors()){
+//            logger.error(" error {} ", errors.getFieldErrors());
+//            return null;
+//        }
+        ResponseGeneric<Boolean> responseGeneric = new ResponseGeneric<>();
+        try{
+            responseGeneric = this.iCorteService.saveCorte(uploadDocumentoDto);
+            return ResponseEntity.status(HttpStatus.OK).body(responseGeneric);
+        }catch (Exception e){
+            logger.error(" {} ",e.getMessage());
+            responseGeneric.setMensaje(e.getMessage());
+            responseGeneric.setDatos(false);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseGeneric);
         }
     }
