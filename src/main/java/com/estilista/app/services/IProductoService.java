@@ -8,6 +8,6 @@ import com.estilista.app.model.Producto;
 
 public interface IProductoService extends IBaseService<Producto, Integer>{
 
-	public List<Producto> findByNombreProductoContaining(@Param("nombre") String nombre );
-	
+	 List<Producto> findByNombreProductoContaining(@Param("nombre") String nombre );
+
 }
