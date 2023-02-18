@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,7 @@ public class Producto extends SuperClase {
 	private static final long serialVersionUID = 1L;
 
 
+	@NotNull(message = "El nombre no deberica")
 	@Column( name = "NOMBRE_PRODUCTO")
 	  private String nombreProducto;
 	  
