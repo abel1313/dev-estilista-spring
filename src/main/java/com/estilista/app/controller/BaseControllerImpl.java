@@ -30,10 +30,10 @@ public abstract class BaseControllerImpl<E extends SuperClase, S extends BaseSer
 	protected S service;
 
 	@Override
-	@GetMapping("")
-	public ResponseEntity<?> getAll() throws Exception {
+	@GetMapping("/{page}/{size}")
+	public ResponseEntity<?> getAll(@PathVariable final int page, @PathVariable final int size) {
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(this.service.getAll() );
+			return ResponseEntity.status(HttpStatus.OK).body(this.service.getAll(page,size) );
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ResourceNotFoundException(e.getMessage()));

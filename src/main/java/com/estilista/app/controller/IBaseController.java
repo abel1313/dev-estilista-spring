@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface IBaseController<E extends SuperClase, ID extends Serializable>
 {
-	ResponseEntity<?> getAll() throws Exception;
+	ResponseEntity<?> getAll(@PathVariable final int page, @PathVariable final int size) throws Exception;
 	ResponseEntity<?> getAllE() throws Exception;
 	ResponseEntity<?> getOne(@PathVariable ID id) throws Exception;
 	ResponseEntity<?> save(@Valid @RequestBody E e) throws Exception;

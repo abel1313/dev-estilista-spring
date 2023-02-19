@@ -54,7 +54,7 @@ public class DireccionController extends BaseControllerImpl<Direccion, Direccion
 			}
 		
 		
-			return ResponseEntity.status(HttpStatus.OK).body(this.iDireccioneService.getAll() );
+			return ResponseEntity.status(HttpStatus.OK).body(this.iDireccioneService.getAll(1,1) );
 		} catch (Exception ee) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error':'Error. Verificar'} ");
 		}

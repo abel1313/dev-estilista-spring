@@ -1,12 +1,21 @@
 package com.estilista.app.service_api;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import com.estilista.app.dto.ImagenDto;
+import com.estilista.app.dto.UploadDocumentoDto;
+import com.estilista.app.model.Corte;
+import com.estilista.app.model.UploadDocumento;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.DataBinder;
@@ -33,11 +42,12 @@ implements IBaseService<E, ID> {
 	}
 
 	@Override
-	public ResponseGeneric<List<E>> getAll() throws Exception{
-		final ResponseGeneric<List<E>> responseGeneric = new ResponseGeneric<>();
+	public ResponseGeneric<Page<E>> getAll(@PathVariable final int page,@PathVariable final int size) throws Exception{
+		final ResponseGeneric<Page<E>> responseGeneric = new ResponseGeneric<>();
 		try {
-			final List<E> lista = this.iBaseRepository.findAll();
-			if( lista.size() > 0 ) {
+			final Pageable pageable = PageRequest.of(page,size);
+			final Page<E> lista = this.iBaseRepository.findAll(pageable);
+			if(Objects.nonNull(lista) ) {
 				responseGeneric.setCodeValue(200);
 				responseGeneric.setDatos(lista);
 			}
@@ -224,5 +234,24 @@ implements IBaseService<E, ID> {
 			return respuesta;
 		}
 
-	
+		@Override
+		public boolean createFile(final String nameDirectorio) throws Exception {
+		boolean fileCrete = false;
+			final File directorio = new File(urlDirectory.concat("//").concat(nameDirectorio)).getAbsoluteFile();
+			if (!directorio.exists()) {
+				if (directorio.mkdirs()) {
+					logger.info("Directorio creado");
+					fileCrete = true;
+				} else {
+					throw new Exception("Ocurrio un error al generar el directorio");
+				}
+			}else{
+				fileCrete = true;
+			}
+
+			return fileCrete;
+		}
+
+
+
 }
