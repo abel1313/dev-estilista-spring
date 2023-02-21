@@ -2,10 +2,10 @@ package com.estilista.app.services;
 
 import java.util.List;
 
+import com.estilista.app.dto.ProductoImagenesDto;
 import com.estilista.app.dto.UploadImagesProductoDto;
 import com.estilista.app.model.ResponseGeneric;
 import org.hibernate.ResourceClosedException;
-import org.springframework.data.repository.query.Param;
 
 import com.estilista.app.model.Producto;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,5 +17,8 @@ public interface IProductoService extends IBaseService<Producto, Integer>{
 
 	 ResponseGeneric<Boolean> saveProductoImage(@RequestBody final Producto producto)throws ResourceClosedException, Exception;
 	public ResponseGeneric<Boolean> saveProductoImage(@RequestBody final UploadImagesProductoDto producto) throws Exception;
+
+	ResponseGeneric<List<ProductoImagenesDto>> searchProducts(@PathVariable final int page,
+															  @PathVariable final int size) throws Exception;
 
 }

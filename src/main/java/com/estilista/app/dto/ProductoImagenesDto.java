@@ -10,10 +10,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UploadImagesProductoDto {
-
+public class ProductoImagenesDto extends SuperDto{
 
     private Producto producto;
-    private List<ImagenDto> list;
+    private List<ImagenDto> imagenes;
 
 }

@@ -2,6 +2,7 @@ package com.estilista.app.controller;
 
 import java.util.List;
 
+import com.estilista.app.dto.ProductoImagenesDto;
 import com.estilista.app.dto.UploadImagesProductoDto;
 import com.estilista.app.model.ResponseGeneric;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,12 @@ public class ProductoController extends BaseControllerImpl<Producto, ProductoSer
 
 
 	@PostMapping("/saveProductoImage")
-	public ResponseEntity<ResponseGeneric<Boolean>>buscarProductos(@RequestBody final UploadImagesProductoDto producto) throws Exception {
+	public ResponseEntity<ResponseGeneric<Boolean>>saveProduct(@RequestBody final UploadImagesProductoDto producto) throws Exception {
 		return ResponseEntity.status(HttpStatus.OK).body(iProductoService.saveProductoImage(producto));
+	}
+
+	@GetMapping("searchProducts/{page}/{size}")
+	public ResponseEntity<ResponseGeneric<List<ProductoImagenesDto>>>searchProductsImage(@PathVariable final int page,@PathVariable final int size) throws Exception {
+		return ResponseEntity.status(HttpStatus.OK).body(iProductoService.searchProducts(page,size));
 	}
 }

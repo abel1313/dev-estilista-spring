@@ -1,19 +1,18 @@
 package com.estilista.app.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Abel Tiburcio
@@ -47,5 +46,9 @@ public class Producto extends SuperClase {
 	  @OneToOne( cascade = CascadeType.ALL)
 	  @JoinColumn( name = "ESTATUS_ID")
 	  private Estatus estatusPieza;
+
+	@OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "producto")
+	@JsonManagedReference
+	private List<UploadImagesProducto> listaImagenes;
 	  
 }
