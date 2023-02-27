@@ -10,6 +10,7 @@ import com.estilista.app.dto.RespuestaDTO;
 import com.estilista.app.model.ResponseGeneric;
 import com.estilista.app.model.SuperClase;
 
+import org.hibernate.ResourceClosedException;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +31,7 @@ public interface IBaseService <E extends SuperClase, ID extends Serializable>{
 	public RespuestaDTO<Optional<E>> obtenerPost( @PathVariable ID id) throws Exception;
 
 
-	boolean createFile(final String nameDirectorio) throws  Exception;
+	boolean createFile(final String nameDirectorio) throws ResourceClosedException;
 
 
 }

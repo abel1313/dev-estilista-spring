@@ -1,24 +1,15 @@
 package com.estilista.app.service_api;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.Serializable;
 import java.util.*;
 
-import com.estilista.app.dto.ImagenDto;
-import com.estilista.app.dto.UploadDocumentoDto;
-import com.estilista.app.model.Corte;
-import com.estilista.app.model.UploadDocumento;
+import org.hibernate.ResourceClosedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.DataBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.estilista.app.dto.RespuestaDTO;
@@ -33,6 +24,7 @@ public abstract class BaseServiceImpl<E extends SuperClase, ID extends Serializa
 implements IBaseService<E, ID> {
 
 	protected final String urlDirectory = ".//src//main//resources//imagenes//";
+	protected final String PATH = "src//main//resources//imagenes//";
 	protected Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
 	protected IBaseRepository<E, ID> iBaseRepository;
 	
@@ -235,7 +227,7 @@ implements IBaseService<E, ID> {
 		}
 
 		@Override
-		public boolean createFile(final String nameDirectorio) throws Exception {
+		public boolean createFile(final String nameDirectorio) throws ResourceClosedException {
 		boolean fileCrete = false;
 			final File directorio = new File(urlDirectory.concat("//").concat(nameDirectorio)).getAbsoluteFile();
 			if (!directorio.exists()) {
@@ -243,7 +235,7 @@ implements IBaseService<E, ID> {
 					logger.info("Directorio creado");
 					fileCrete = true;
 				} else {
-					throw new Exception("Ocurrio un error al generar el directorio");
+					throw new ResourceClosedException("Ocurrio un error al generar el directorio");
 				}
 			}else{
 				fileCrete = true;

@@ -39,11 +39,11 @@ public class Producto extends SuperClase {
 	  private String nombreProducto;
 	  
 	  
-	  @OneToOne( cascade = CascadeType.ALL)
+	  @OneToOne( cascade = CascadeType.MERGE)
 	  @JoinColumn( name = "TIPO_PIEZA_ID")
 	  private TamanioProducto tamanoProducto;
 	  
-	  @OneToOne( cascade = CascadeType.ALL)
+	  @OneToOne( cascade = CascadeType.MERGE)
 	  @JoinColumn( name = "ESTATUS_ID")
 	  private Estatus estatusPieza;
 

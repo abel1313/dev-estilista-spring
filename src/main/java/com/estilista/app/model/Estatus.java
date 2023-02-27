@@ -26,7 +26,8 @@ public class Estatus extends SuperClase implements Serializable {/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	private char activo;
+
+
+	private int activo;
 
 }

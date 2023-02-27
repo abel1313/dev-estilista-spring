@@ -1,16 +1,18 @@
 package com.estilista.app.service_api;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import com.estilista.app.dto.*;
 import com.estilista.app.exception.ResourceNotFoundException;
 import com.estilista.app.model.*;
+import com.estilista.app.repositories.IImagenRepository;
 import com.estilista.app.repositories.IUploadImagesProductoRepository;
 import com.estilista.app.services.IFormatoDocumentoService;
+import com.estilista.app.services.IIMagenTemporalService;
 import com.estilista.app.services.IUploadImagesPrductoService;
-import org.hibernate.ResourceClosedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.Param;
@@ -18,42 +20,15 @@ import org.springframework.stereotype.Service;
 import com.estilista.app.repositories.IBaseRepository;
 import com.estilista.app.repositories.IProductoRepository;
 import com.estilista.app.services.IProductoService;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
-public class ProductoServiceImp extends BaseServiceImpl<Producto, Integer>implements IProductoService{
+public class ProductoServiceImp extends BaseImagenesAbstract{
 
 
-	private IProductoRepository iProductoRepository;
-	private IFormatoDocumentoService iFormatoDocumentoService;
-	private IUploadImagesPrductoService iUploadImagesPrductoService;
-
-	private final String NAME_FOLDER_PRODUCTOS = "productos";
-	private final String NAME_BARRA = "//";
-
-	@Autowired
-	private IUploadImagesProductoRepository iUploadImagesProductoRepository;
-	
-	public ProductoServiceImp(final IBaseRepository<Producto, Integer> iBaseRepository) {
+	public ProductoServiceImp(IBaseRepository<Producto, Integer> iBaseRepository) {
 		super(iBaseRepository);
-		// TODO Auto-generated constructor stub
-	}
-	@Autowired
-	public void setiProductoRepository(final IProductoRepository iProductoRepository) {
-		this.iProductoRepository = iProductoRepository;
-	}
-
-	@Autowired
-	public void setiFormatoDoucmento(final IFormatoDocumentoService iFormatoDocumentoService) {
-		this.iFormatoDocumentoService = iFormatoDocumentoService;
-	}
-
-	@Autowired
-	public void setiUploadImagesPrductoService(IUploadImagesPrductoService iUploadImagesPrductoService) {
-		this.iUploadImagesPrductoService = iUploadImagesPrductoService;
 	}
 
 	@Override
@@ -62,22 +37,13 @@ public class ProductoServiceImp extends BaseServiceImpl<Producto, Integer>implem
 	}
 
 	@Override
-	public ResponseGeneric<Boolean> saveProductoImage(Producto producto) throws ResourceClosedException, Exception {
-		return null;
-	}
-
-	public ResponseGeneric<Boolean> saveProductoImage(@RequestBody final UploadImagesProductoDto producto) throws Exception {
-		final Producto per =iProductoRepository.save( producto.getProducto());
-		if( Objects.nonNull(per)){
-
-		}
-
-
+	public ResponseGeneric<Boolean> saveProductoImage(@RequestBody final UploadImagesProductoDto producto) throws ResourceNotFoundException {
 		final ResponseGeneric<Boolean> responseGeneric = new ResponseGeneric<>();
 		responseGeneric.setDatos(false);
-		final String NAME_PRODUCTO = "productos";
-		if( createFile(NAME_PRODUCTO) ){
-
+		final Producto per =iProductoRepository.save( producto.getProducto());
+		if( Objects.nonNull(per)){
+			final String NAME_PRODUCTO = "productos";
+			if( createFile(NAME_PRODUCTO) ){
 				try {
 					final List<ImagenDto> listImg = producto.getList().stream().map(m->{
 						final ImagenDto uploadImagesProducto = new ImagenDto();
@@ -119,13 +85,63 @@ public class ProductoServiceImp extends BaseServiceImpl<Producto, Integer>implem
 					logger.error(" Ocurrio un error al escribir el documento UploadDocumentoService, upload {} ",e.getMessage());
 					throw new RuntimeException(e);
 				}
-			responseGeneric.setMensaje("Se guardo el producto");
-			responseGeneric.setCodeValue(200);
-			responseGeneric.setDatos(true);
-		}else{
-			responseGeneric.setMensaje("La carpeta no se creo");
+				responseGeneric.setMensaje("Se guardo el producto");
+				responseGeneric.setCodeValue(200);
+				responseGeneric.setDatos(true);
+			}else{
+				responseGeneric.setMensaje("La carpeta no se creo");
+			}
 		}
+		return responseGeneric;
+	}
 
+
+
+	private void deletePath(final Producto prod1){
+		List<Integer> listaIds = prod1.getListaImagenes().stream().map(mappId->mappId.getId()).collect(Collectors.toList());
+		final File files = new File(PATH_PRODUCTOS).getAbsoluteFile();
+
+		listaIds.forEach(fo->{
+			final Optional<File> exist = Arrays.stream(files.listFiles()).filter(f -> {
+				final String divideCadena[] = f.getName().split("-");
+				final String cadenaEncontrada = divideCadena[1].replace(".txt", "");
+				return cadenaEncontrada.equals(String.valueOf(fo));
+			}).findFirst();
+			if( exist.isPresent()){
+				final File fil = exist.get();
+				final String name = fil.getAbsolutePath();
+
+				try {
+					Files.delete(fil.toPath());
+					logger.error("%s not empty%n", name);
+				} catch (IOException x) {
+					logger.error("%s not empty%n", x.getMessage());
+				}
+
+			}
+		});
+	}
+	@Override
+	public ResponseGeneric<Boolean>  updateProductoImage(@RequestBody final UploadImagesProductoDto producto) throws ResourceNotFoundException {
+		final ResponseGeneric<Boolean> responseGeneric = new ResponseGeneric<>();
+		responseGeneric.setDatos(false);
+
+
+		final Optional<Producto> per2 =iProductoRepository.findById( producto.getProducto().getId() );
+
+		Producto productoUpdate = per2.get();
+
+		final List<ImagenTemporal> imagenTemporals = productoUpdate.getListaImagenes().stream().map(m->{
+			ImagenTemporal imgTemp = new ImagenTemporal();
+			imgTemp.setNombreProducto("producto");
+			imgTemp.setIdImagen(m.getId());
+			return imgTemp;
+		}).collect(Collectors.toList());
+
+
+		final List<ImagenTemporal> saveIma = this.iImagenRepository.saveAll(imagenTemporals);
+		iUploadImagesProductoRepository.deleteAll(productoUpdate.getListaImagenes());
+				final Producto imagesProductoList = saveImages(producto);
 		return responseGeneric;
 	}
 
@@ -137,17 +153,19 @@ public class ProductoServiceImp extends BaseServiceImpl<Producto, Integer>implem
 		final Pageable pageable = PageRequest.of(page,size, Sort.by("id"));
 		final Page<UploadImagesProducto> pageImagenes = this.iUploadImagesProductoRepository.findAll(pageable);
 
-		final List<ProductoImagenesDto> lista = pageImagenes.getContent().stream().map(m->{
-			final ProductoImagenesDto productoImagenesDto = new ProductoImagenesDto();
-			productoImagenesDto.setProducto(m.getProducto());
+		final Page<Producto> listProducto = this.iProductoRepository.findAll(pageable);
 
-			final List<ImagenDto> imagenDtoList = m.getProducto().getListaImagenes().stream().map(mapp->{
+		final List<ProductoImagenesDto> lista = listProducto.getContent().stream().map(m->{
+			final ProductoImagenesDto productoImagenesDto = new ProductoImagenesDto();
+			final List<ImagenDto> imagenDtoList = m.getListaImagenes().stream().map(mapp->{
+				productoImagenesDto.setProducto(mapp.getProducto());
+				productoImagenesDto.setId(mapp.getId());
 				final ImagenDto imagenDto = new ImagenDto();
 				imagenDto.setId(mapp.getId());
 				imagenDto.setNombreImagen(mapp.getNombreImagen());
 				imagenDto.setExtencionImagen(mapp.getFormatoDocumento().getExtencion());
 
-				final String urlConcat = urlDirectory.concat(NAME_BARRA).concat(NAME_FOLDER_PRODUCTOS);
+				final String urlConcat = PATH.concat(NAME_FOLDER_PRODUCTOS);
 				FileReader fr;
 				BufferedReader br;
 				final File files = new File(urlConcat).getAbsoluteFile();
@@ -187,6 +205,63 @@ public class ProductoServiceImp extends BaseServiceImpl<Producto, Integer>implem
 			productoImagenesDto.setImagenes(imagenDtoList);
 			return productoImagenesDto;
 		}).collect(Collectors.toList());
+
+//	lista.stream().collect(Collectors.groupingBy(ProductoImagenesDto::getId));
+
+//		final List<ProductoImagenesDto> lista = pageImagenes.getContent().stream().map(m->{
+//			final ProductoImagenesDto productoImagenesDto = new ProductoImagenesDto();
+//			productoImagenesDto.setProducto(m.getProducto());
+//
+//			final List<ImagenDto> imagenDtoList = m.getProducto().getListaImagenes().stream().map(mapp->{
+//				final ImagenDto imagenDto = new ImagenDto();
+//				imagenDto.setId(mapp.getId());
+//				imagenDto.setNombreImagen(mapp.getNombreImagen());
+//				imagenDto.setExtencionImagen(mapp.getFormatoDocumento().getExtencion());
+//
+//				final String urlConcat = urlDirectory.concat(NAME_BARRA).concat(NAME_FOLDER_PRODUCTOS);
+//				FileReader fr;
+//				BufferedReader br;
+//				final File files = new File(urlConcat).getAbsoluteFile();
+//				final Optional<File> exist = Arrays.stream(files.listFiles()).filter(f -> {
+//					final String divideCadena[] = f.getName().split("-");
+//					final String cadenaEncontrada = divideCadena[1].replace(".txt", "");
+//					return cadenaEncontrada.equals(String.valueOf(mapp.getId()));
+//				}).findFirst();
+//				if( exist.isPresent()){
+//					File existFile = exist.get();
+//					if (!existFile.isDirectory()) {
+//						try {
+//							fr = new FileReader(urlConcat.concat(NAME_BARRA).concat(existFile.getName()));
+//							br = new BufferedReader(fr);
+//							String linea;
+//							while ((linea = br.readLine()) != null)
+//								imagenDto.setBase64Imagen(linea);
+//							imagenDto.setNombreImagen(mapp.getNombreImagen());
+//							imagenDto.setExtencionImagen(mapp.getFormatoDocumento().getExtencion());
+//
+//						} catch (FileNotFoundException e) {
+//							logger.error("Ocurrio un error, No se encontro el archivo.  {}  UploadDocumentoService, getImages ", e.getMessage());
+//							throw new RuntimeException("Ocurrio un error, el archivo no existe");
+//						} catch (IOException e) {
+//							logger.error("Ocurrio un error, IOException.  {}  UploadDocumentoService, getImages ", e.getMessage());
+//							throw new RuntimeException("Ocurrio un error al cargar las imagenes");
+//						}
+//					} else {
+//						logger.error("No existe  ");
+//					}
+//				}
+//
+//
+//
+//				return  imagenDto;
+//			}).collect(Collectors.toList());
+//
+//			productoImagenesDto.setImagenes(imagenDtoList);
+//			return productoImagenesDto;
+//		}).collect(Collectors.toList() );
+
+
+		logger.debug(" log {} ",	lista.stream().collect(Collectors.groupingBy(ProductoImagenesDto::getId)) );
 		final Page<ProductoImagenesDto> corteDtoPage = new PageImpl<>(lista);
 		final ResponseGeneric<List<ProductoImagenesDto> > responseGeneric = new ResponseGeneric<>();
 		if( !corteDtoPage.isEmpty()){
@@ -194,6 +269,69 @@ public class ProductoServiceImp extends BaseServiceImpl<Producto, Integer>implem
 			responseGeneric.setCodeValue(200);
 			responseGeneric.setMensaje("Se encotraron registros");
 			responseGeneric.setDatos(corteDtoPage.getContent());
+		}
+		return responseGeneric;
+	}
+
+
+	@Override
+	public ResponseGeneric<Optional<ProductoImagenesDto>> findByIdProduct(@PathVariable final int id) throws Exception {
+		final ProductoImagenesDto productoImagenesDto = new ProductoImagenesDto();
+		final Optional<Producto> optionalProducto = this.iProductoRepository.findById(id);
+		if( optionalProducto.isPresent()){
+			final Producto producto = optionalProducto.get();
+			final List<ImagenDto> imagenDtoList = producto.getListaImagenes().stream().map(mapp->{
+				productoImagenesDto.setProducto(mapp.getProducto());
+				productoImagenesDto.setId(producto.getId());
+				final ImagenDto imagenDto = new ImagenDto();
+				imagenDto.setId(mapp.getId());
+				imagenDto.setNombreImagen(mapp.getNombreImagen());
+				imagenDto.setExtencionImagen(mapp.getFormatoDocumento().getExtencion());
+
+				final String urlConcat = urlDirectory.concat(NAME_BARRA).concat(NAME_FOLDER_PRODUCTOS);
+				FileReader fr;
+				BufferedReader br;
+				final File files = new File(urlConcat).getAbsoluteFile();
+				final Optional<File> exist = Arrays.stream(files.listFiles()).filter(f -> {
+					final String divideCadena[] = f.getName().split("-");
+					final String cadenaEncontrada = divideCadena[1].replace(".txt", "");
+					return cadenaEncontrada.equals(String.valueOf(mapp.getId()));
+				}).findFirst();
+				if( exist.isPresent()){
+					File existFile = exist.get();
+					if (!existFile.isDirectory()) {
+						try {
+							fr = new FileReader(urlConcat.concat(NAME_BARRA).concat(existFile.getName()));
+							br = new BufferedReader(fr);
+							String linea;
+							while ((linea = br.readLine()) != null)
+								imagenDto.setBase64Imagen(linea);
+							imagenDto.setNombreImagen(mapp.getNombreImagen());
+							imagenDto.setExtencionImagen(mapp.getFormatoDocumento().getExtencion());
+
+						} catch (FileNotFoundException e) {
+							logger.error("Ocurrio un error, No se encontro el archivo.  {}  UploadDocumentoService, getImages ", e.getMessage());
+							throw new RuntimeException("Ocurrio un error, el archivo no existe");
+						} catch (IOException e) {
+							logger.error("Ocurrio un error, IOException.  {}  UploadDocumentoService, getImages ", e.getMessage());
+							throw new RuntimeException("Ocurrio un error al cargar las imagenes");
+						}
+					} else {
+						logger.error("No existe  ");
+					}
+				}
+				return  imagenDto;
+			}).collect(Collectors.toList());
+			productoImagenesDto.setProducto(producto);
+			productoImagenesDto.setImagenes(imagenDtoList);
+		}
+
+		final ResponseGeneric<Optional<ProductoImagenesDto>> responseGeneric = new ResponseGeneric<>();
+		if( productoImagenesDto != null ){
+			responseGeneric.setCode("200 OK");
+			responseGeneric.setCodeValue(200);
+			responseGeneric.setMensaje("Se encotro el producto");
+			responseGeneric.setDatos(Optional.of(productoImagenesDto));
 		}
 		return responseGeneric;
 	}
